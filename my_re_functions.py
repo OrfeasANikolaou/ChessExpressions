@@ -1,5 +1,5 @@
-import re
 import calendar
+import re
 
 a_pgn_game = """
 [Event "WCh 2023"]
@@ -24,33 +24,51 @@ a_pgn_game = """
 
 
 def winner(a_pgn_game):
+    """
+    Returns who was the winner depending on points recienved
+    "1 - 0" white wins
+    can be draw witħ 1/2 - 1/2
+    parameter must be a pgn format game
+    """
     result = re.findall(r'\[Result "(\d/?\d?)-(\d/?\d?)"\]', a_pgn_game)
-    if result[0][0] == '1/2':
+    if result[0][0] == "1/2":
         return "ΙΣΟΠΑΛΙΑ"
     # https://chat.openai.com/share/50cac6db-2638-46ec-a773-43c86373a84c
     # white wins when result "1-0"
-    elif result[0][0] == '1':
+    elif result[0][0] == "1":
         return "ΛΕΥΚΑ"
     else:
         return "ΜΑΥΡΑ"
 
 
 def date_of_game(a_pgn_game):
+    """
+    Returns date of match in DD-MM-YYYY format
+    parameter must be pgn format game
+    """
     # match 0 == YYYY
     # match 1 == MM
     # match 2 == DD
-    date = re.findall(r'Date ".*(\d{4})\.(\d\d|\?\?)\.(\d+|\?\?).*"', a_pgn_game)[0] 
-    return date[2] + '-' + date[1] + '-' + date[0]
+    date = re.findall(r'Date ".*(\d{4})\.(\d\d|\?\?)\.(\d+|\?\?).*"', a_pgn_game)[0]
+    return date[2] + "-" + date[1] + "-" + date[0]
 
 
 def diff_elo(a_pgn_game):
+    """
+    Returns difference in elo between the two platers
+    parameter must be a pgn format game
+    """
     white_elo = re.findall(r'WhiteElo "(\d+)"', a_pgn_game)[0]
     black_elo = re.findall(r'BlackElo "(\d+)"', a_pgn_game)[0]
-    return(abs(int(white_elo) - int(black_elo)))
+    return abs(int(white_elo) - int(black_elo))
 
 
 def moves(a_pgn_game):
-    return int(re.findall(r'(\d+)\.', a_pgn_game)[-1])
+    """
+    Returns how many moves were made in the match (black response doesn't count)
+    parameter must be a pgn format game
+    """
+    return int(re.findall(r"(\d+)\.", a_pgn_game)[-1])
 
 
 if __name__ == "__main__":

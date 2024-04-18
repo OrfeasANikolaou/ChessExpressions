@@ -1,7 +1,15 @@
-import sys
 import os
+import sys
+from datetime import datetime
+
+import my_re_functions as mrf
+
 
 def arg_checker(args):
+    """
+    Checks if given arguments are valid for program
+    paramter is sys.argv
+    """
     if len(args) != 2:
         print(f"argument count must be 2, given is {len(sys.argv)}")
         return 1
@@ -14,7 +22,12 @@ def arg_checker(args):
         return 3
     return 0
 
+
 def mk_games(file_name):
+    """
+    Reads .pgn format file and makes a list of each game
+    parameter must be a .pgn format file, since implementation depends on it
+    """
     games = []
     # https://chat.openai.com/share/fd663b5a-31cf-44f6-803e-fe64adb07834
     with open(file_name, "r", encoding="latin-1") as f:
@@ -28,3 +41,23 @@ def mk_games(file_name):
                 first_time = False
             game += line
     return games
+
+
+def days_counter(games):
+    """
+    Returns dictioary of days, where value is how many times a match has been played in that day of the week
+    paramter must be list of games
+    """
+    days_count = {"Mon": 0, "Tue": 0, "Wed": 0, "Thu": 0, "Fri": 0, "Sat": 0, "Sun": 0}
+    for game in games:
+        if mrf.date_of_game(game) != None:
+            try:
+                # https://chat.openai.com/share/728d7c1d-f517-4145-b4d6-1f0ea7b8dc8e
+                date_obj = datetime.strptime(mrf.date_of_game(game), "%d-%m-%Y")
+                day_of_week = date_obj.strftime("%a")
+                days_count[day_of_week] += 1
+            except ValueError:
+                # spoof interpreter to execture except and goes to next game
+                pass
+    # https://www.geeksforgeeks.org/bar-plot-in-matplotlib/
+    return days_count
