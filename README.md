@@ -1,0 +1,6 @@
+# ChessExpressions
+
+## Dependencies
+
+- Matplotlib
+- isort
