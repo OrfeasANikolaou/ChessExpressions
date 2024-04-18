@@ -51,10 +51,11 @@ def days_counter(games):
     days_count = {"Mon": 0, "Tue": 0, "Wed": 0, "Thu": 0, "Fri": 0, "Sat": 0, "Sun": 0}
     for game in games:
         if mrf.date_of_game(game) != None:
+            # https://chat.openai.com/share/532292e6-1c57-4632-9d57-727aedb61420
             try:
-                # https://chat.openai.com/share/728d7c1d-f517-4145-b4d6-1f0ea7b8dc8e
                 date_obj = datetime.strptime(mrf.date_of_game(game), "%d-%m-%Y")
                 day_of_week = date_obj.strftime("%a")
+                # https://chat.openai.com/share/b48e4985-d8c1-468c-860e-0c8d5dee6311
                 days_count[day_of_week] += 1
             except ValueError:
                 # spoof interpreter to execture except and goes to next game
