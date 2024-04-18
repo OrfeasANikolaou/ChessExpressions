@@ -1,33 +1,12 @@
 import my_re_functions as mrf
+import chess_helper_functions as chf 
 import sys
-import os
-
-
 
 
 def main():
-    games = []
-    if len(sys.argv) != 2:
-        print(f"argument count must be 2, given is {len(sys.argv)}")
-        exit(1)
-    if sys.argv[1][-4:] != ".pgn":
-        print(f"argument extension must be .pgn")
-        exit(1)
-    # https://stackoverflow.com/a/82852
-    if not os.path.isfile(sys.argv[1]):
-        print(f"{sys.argv[1]} not found or could not be opened")
-        exit(1)
-    with open(sys.argv[1], "r") as file:
-        first_time = True
-        game = ""
-        for line in file:
-            if ("Event" in line) and first_time == False:
-                games.append(game)
-                game = ""
-            if ("Event" in line) and first_time == True:
-                first_time = False
-            game += line
-
+    if chf.arg_checker(sys.argv) != 0:
+        return 1
+    games = chf.mk_games(sys.argv[1])
     n_of_games = len(games)
     for i in range(n_of_games):
         print(f"\nΔΕΔΟΜΕΝΑ ΤΟΥ ΑΓΩΝΑ n.{i+1}:") 

@@ -34,14 +34,14 @@ def winner(a_pgn_game):
     else:
         return "ΜΑΥΡΑ"
 
+
 def date_of_game(a_pgn_game):
     # match 0 == YYYY
     # match 1 == MM
     # match 2 == DD
-    date = re.findall(r'Date "(\d{4})\.(\d{2})\.(\d{2})"', a_pgn_game)[0] 
-    if int(date[1]) == 2 and int(date[2]) > 29:
-        return None
+    date = re.findall(r'Date ".*(\d{4})\.(\d\d|\?\?)\.(\d+|\?\?).*"', a_pgn_game)[0] 
     return date[2] + '-' + date[1] + '-' + date[0]
+
 
 def diff_elo(a_pgn_game):
     white_elo = re.findall(r'WhiteElo "(\d+)"', a_pgn_game)[0]
