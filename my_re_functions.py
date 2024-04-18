@@ -1,4 +1,5 @@
 import re
+import calendar
 
 a_pgn_game = """
 [Event "WCh 2023"]
@@ -26,7 +27,7 @@ def winner(a_pgn_game):
     result = re.findall(r'\[Result "(\d/?\d?)-(\d/?\d?)"\]', a_pgn_game)
     if result[0][0] == '1/2':
         return "ΙΣΟΠΑΛΙΑ"
-    # https://chat.openai.com/c/4ce5bc08-4a33-41cd-bc65-77828fdfe9c5
+    # https://chat.openai.com/share/50cac6db-2638-46ec-a773-43c86373a84c
     # white wins when result "1-0"
     elif result[0][0] == '1':
         return "ΛΕΥΚΑ"
@@ -34,15 +35,22 @@ def winner(a_pgn_game):
         return "ΜΑΥΡΑ"
 
 def date_of_game(a_pgn_game):
-    pass
-
+    # match 0 == YYYY
+    # match 1 == MM
+    # match 2 == DD
+    date = re.findall(r'Date "(\d{4})\.(\d{2})\.(\d{2})"', a_pgn_game)[0] 
+    if int(date[1]) == 2 and int(date[2]) > 29:
+        return None
+    return date[2] + '-' + date[1] + '-' + date[0]
 
 def diff_elo(a_pgn_game):
-    pass
+    white_elo = re.findall(r'WhiteElo "(\d+)"', a_pgn_game)[0]
+    black_elo = re.findall(r'BlackElo "(\d+)"', a_pgn_game)[0]
+    return(abs(int(white_elo) - int(black_elo)))
 
 
 def moves(a_pgn_game):
-    pass
+    return int(re.findall(r'(\d+)\.', a_pgn_game)[-1])
 
 
 if __name__ == "__main__":
